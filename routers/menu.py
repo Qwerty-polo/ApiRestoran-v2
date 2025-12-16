@@ -28,13 +28,15 @@ async def create_category(category: CategoryCreate, db: SessionDep):
 #!!!повторить і подивиця як працює
 @router.get("/categories", response_model=List[CategoryResponse])
 async def get_menu(db: SessionDep):
-    query = select(CategoryModel).options(selectinload(CategoryModel.dishes))
+    query = select(CategoryModel).options(selectinload(CategoryModel.dishes)) #Завантаж мені категорії
+    # І ОДРАЗУ підтягни всі страви, які до них прив'язані
     result = await db.execute(query)
     return result.scalars().all()
 #!!! повторить і подивиця як працює
 @router.post("/dishes", response_model=DishResponse)
 async def create_dish(dish: DishCreate, db: SessionDep):
-    cat = await db.get(CategoryModel, dish.category_id)
+    cat = await db.get(CategoryModel, dish.category_id) #Знайди мені категорію з таким ID,
+    # який вказав користувач (dish.category_id)".
     if not cat:
         raise HTTPException(status_code=404, detail="Category not found")
 

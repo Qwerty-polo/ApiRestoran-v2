@@ -7,6 +7,11 @@ from routers import auth, menu, orders
 
 from fastapi.security import HTTPBearer # цу для замочка
 
+from sqladmin import Admin
+from admin import UserAdmin, CategoryAdmin, DishAdmin, OrderAdmin, authentication_backend
+
+
+
 bearer_scheme = HTTPBearer() # додали замочок у наш swager
 
 # --- LIFESPAN (Життєвий цикл) ---
@@ -28,6 +33,16 @@ async def lifespan(app: FastAPI):
 # --- ІНІЦІАЛІЗАЦІЯ ---
 # Передаємо наш lifespan у FastAPI
 app = FastAPI(lifespan=lifespan, title="pizza Deliver v2")
+
+# 🔥 ПІДКЛЮЧАЄМО АДМІНКУ 🔥
+admin = Admin(app, engine, authentication_backend=authentication_backend)
+
+# Додаємо сторінки, які ми створили в admin.py
+admin.add_view(UserAdmin)
+admin.add_view(CategoryAdmin)
+admin.add_view(DishAdmin)
+admin.add_view(OrderAdmin)
+
 
 # Підключаємо папку для картинок (щоб їх можна було відкрити в браузері)
 app.mount("/static", StaticFiles(directory="static"), name="static")

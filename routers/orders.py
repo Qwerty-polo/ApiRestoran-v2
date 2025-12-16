@@ -55,11 +55,13 @@ async def create_order(order_data: OrderCreate,
 # !!!!!!!! повторить і зрозуміть як все працює
 @router.get("/orders", response_model=List[OrderResponse])
 async def get_my_order(db:SessionDep, user_token = Depends(security.access_token_required)):
-    user_id = int(user_token.sub)
+    user_id = int(user_token.sub)#У стандарті JWT (JSON Web Token) поле sub (subject) зазвичай зберігає ID користувача.
+    # Але в токені це завжди рядок (текст).int(...): Ми перетворюємо текст "5" у число 5
     query = (
         select(OrderModel)
-        .options(selectinload(OrderModel.items))
-        .where(OrderModel.user_id == user_id)
+        .options(selectinload(OrderModel.items)) #підтягни список товарів (items) для кожного замовлення".
+        .where(OrderModel.user_id == user_id) #Дай замовлення ТІЛЬКИ ті, де власник (user_id) дорівнює нашому user_id
+        # (якого ми дістали з токена)". Це гарантує, що Вася побачить тільки замовлення Васі,
     )
     result = await db.execute(query)
     return result.scalars().all()

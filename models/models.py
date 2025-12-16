@@ -16,6 +16,10 @@ class UserModel(Base):
     # Зв'язок: Один юзер -> Багато замовлень
     orders: Mapped[List["OrderModel"]] = relationship(back_populates="user")
 
+    def __str__(self):
+        return self.username  # Тепер в адмінці буде написано просто "Pizza"
+
+
 class CategoryModel(Base):
     __tablename__ = "categories"
 
@@ -25,6 +29,9 @@ class CategoryModel(Base):
     # Зв'язок: Одна категорія -> Багато страв
     # cascade="all, delete" означає: видалимо категорію -> видаляться всі її страви
     dishes: Mapped[List["DishModel"]] = relationship(back_populates="category", cascade="all, delete")
+
+    def __str__(self):
+        return self.name
 
 class DishModel(Base):
     __tablename__ = "dishes"
@@ -40,6 +47,9 @@ class DishModel(Base):
 
     # Зв'язок назад до категорії
     category: Mapped[CategoryModel] = relationship(back_populates="dishes")
+
+    def __str__(self):
+        return self.name
 
 
 class OrderModel(Base):
