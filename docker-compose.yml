@@ -13,7 +13,7 @@ services:
     depends_on:
       - redis  # Кажемо: "Не запускайся, поки не прокинеться Redis"
     environment:
-      - REDIS_HOST=redis  # Адреса Редіса всередині мережі Докера
+      - REDIS_HOST=redis://redis:6379/0  # Адреса Редіса всередині мережі Докера
 
   # База даних Redis (кеш)
   redis:

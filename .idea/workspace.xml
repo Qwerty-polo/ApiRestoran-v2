@@ -5,15 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5677be90-c71a-46cb-8e22-faccda3ef1e1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.dockerignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/redis_client.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/menu.db" beforeDir="false" afterPath="$PROJECT_DIR$/menu.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routers/menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/routers/menu.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routers/orders.py" beforeDir="false" afterPath="$PROJECT_DIR$/routers/orders.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,7 +90,7 @@
       <workItem from="1766481214990" duration="4903000" />
       <workItem from="1766650881295" duration="595000" />
       <workItem from="1766747640709" duration="12829000" />
-      <workItem from="1767346046577" duration="631000" />
+      <workItem from="1767346046577" duration="1784000" />
     </task>
     <servers />
   </component>

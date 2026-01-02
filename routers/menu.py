@@ -1,23 +1,27 @@
-from fastapi import Depends, FastAPI, HTTPException, APIRouter
+from fastapi import HTTPException, APIRouter
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from typing import List
 
 from database.db import SessionDep
 from models.models import CategoryModel, DishModel
-from schemas.schemas import CategoryCreate, CategoryResponse,DishResponse,DishCreate
-from routers.auth import security
+from schemas.schemas import CategoryCreate, CategoryResponse, DishResponse, DishCreate
 
 import json
 from fastapi.encoders import jsonable_encoder
 from database.redis_client import redis_client
+
 router = APIRouter(tags=["menu"])
+
 
 @router.post("/categories", response_model=CategoryResponse)
 async def create_category(category: CategoryCreate, db: SessionDep):
-    new_cat = CategoryModel(name = category.name)
+    new_cat = CategoryModel(name=category.name)
     db.add(new_cat)
     await db.commit()
+
+    await redis_client.delete("full_menu")
+    print("Cache cleared because new category added")
 
     query = (
         select(CategoryModel)
@@ -31,7 +35,7 @@ async def create_category(category: CategoryCreate, db: SessionDep):
 #!!!повторить і подивиця як працює
 @router.get("/categories", response_model=List[CategoryResponse])
 async def get_menu(db: SessionDep):
-    #add redis in our func
+    # add redis in our func
     # 🕵️ КРОК 1: Перевіряємо Redis (Кеш)
     # Ми шукаємо ключ "full_menu"
     cached_menu = await redis_client.get("full_menu")
@@ -42,7 +46,9 @@ async def get_menu(db: SessionDep):
         return json.loads(cached_menu)
 
     print("Cashed menu was not taken from redis go to DB")
-    query = select(CategoryModel).options(selectinload(CategoryModel.dishes)) #Завантаж мені категорії
+    query = select(CategoryModel).options(
+        selectinload(CategoryModel.dishes)
+    )  # Завантаж мені категорії
     # І ОДРАЗУ підтягни всі страви, які до них прив'язані
     result = await db.execute(query)
     categories = result.scalars().all()
@@ -57,21 +63,21 @@ async def get_menu(db: SessionDep):
     return categories
 
 
-
 #!!! повторить і подивиця як працює
 @router.post("/dishes", response_model=DishResponse)
 async def create_dish(dish: DishCreate, db: SessionDep):
-    cat = await db.get(CategoryModel, dish.category_id) #Знайди мені категорію з таким ID,
+    cat = await db.get(
+        CategoryModel, dish.category_id
+    )  # Знайди мені категорію з таким ID,
     # який вказав користувач (dish.category_id)".
     if not cat:
         raise HTTPException(status_code=404, detail="Category not found")
 
     new_dish = DishModel(
-        name = dish.name,
-        description = dish.description,
-        price = dish.price,
-        category_id = dish.category_id,
-
+        name=dish.name,
+        description=dish.description,
+        price=dish.price,
+        category_id=dish.category_id,
     )
     db.add(new_dish)
     await db.commit()

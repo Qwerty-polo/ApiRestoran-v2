@@ -1,11 +1,9 @@
-from xmlrpc.client import Boolean
-
-from pycparser.c_ast import Default
 from sqlalchemy import String, ForeignKey, Float, DateTime, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import List, Optional
 from datetime import datetime
 from database.db import Base
+
 
 class UserModel(Base):
     __tablename__ = "users"
@@ -28,10 +26,13 @@ class CategoryModel(Base):
 
     # Зв'язок: Одна категорія -> Багато страв
     # cascade="all, delete" означає: видалимо категорію -> видаляться всі її страви
-    dishes: Mapped[List["DishModel"]] = relationship(back_populates="category", cascade="all, delete")
+    dishes: Mapped[List["DishModel"]] = relationship(
+        back_populates="category", cascade="all, delete"
+    )
 
     def __str__(self):
         return self.name
+
 
 class DishModel(Base):
     __tablename__ = "dishes"
@@ -55,7 +56,7 @@ class DishModel(Base):
 class OrderModel(Base):
     __tablename__ = "orders"
     id: Mapped[int] = mapped_column(primary_key=True)
-    status: Mapped[str] = mapped_column(String,default="pending")
+    status: Mapped[str] = mapped_column(String, default="pending")
     total_price: Mapped[float] = mapped_column(Float, default=0.0)
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
 
@@ -64,7 +65,10 @@ class OrderModel(Base):
     user: Mapped[UserModel] = relationship(back_populates="orders")
 
     # Що всередині? (Список товарів у чеку)
-    items: Mapped[List["OrderItemModel"]]= relationship(back_populates="order", cascade="all, delete")
+    items: Mapped[List["OrderItemModel"]] = relationship(
+        back_populates="order", cascade="all, delete"
+    )
+
 
 class OrderItemModel(Base):
     __tablename__ = "order_items"

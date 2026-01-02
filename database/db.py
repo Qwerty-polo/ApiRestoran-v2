@@ -1,5 +1,5 @@
 from typing import Annotated
-from fastapi import FastAPI, Depends
+from fastapi import Depends
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from sqlalchemy.orm import DeclarativeBase
 
@@ -25,16 +25,19 @@ SessionLocal = async_sessionmaker(
     expire_on_commit=False,
 )
 
+
 # 4. Базова модель (Base)
 # Всі наші таблиці будуть наслідуватися від цього класу.
 class Base(DeclarativeBase):
     pass
+
 
 # 5. Dependency (Залежність для FastAPI)
 # Ця функція відкриває сесію, віддає її роутеру і закриває.
 async def get_db():
     async with SessionLocal() as session:
         yield session
+
 
 # 6. Створюємо готовий Тип Даних (Annotated)
 # Щоб у роутерах писати просто: db: SessionDep

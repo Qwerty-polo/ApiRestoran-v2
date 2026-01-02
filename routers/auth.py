@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException
 from sqlalchemy import select
 from passlib.context import CryptContext
 from authx import AuthX, AuthXConfig
@@ -19,19 +19,21 @@ def get_password_hash(password: str) -> str:
     print("PASSWORD LENGTH:", len(password))
     return pwd_context.hash(password)
 
+
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
 
 config = AuthXConfig()
-config.JWT_SECRET_KEY = "SECRET_KEY" # У реальному проекті це має бути складний код
-config.JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=1) # Токен живе 1 день
-config.JWT_TOKEN_LOCATION = ["headers"] # Поки що тільки заголовки (найстабільніше)
+config.JWT_SECRET_KEY = "SECRET_KEY"  # У реальному проекті це має бути складний код
+config.JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=1)  # Токен живе 1 день
+config.JWT_TOKEN_LOCATION = ["headers"]  # Поки що тільки заголовки (найстабільніше)
 
 security = AuthX(config)
 
+
 @router.post("/register", response_model=UserResponse)
-async def register(user_data:UserLogin, db: SessionDep):
+async def register(user_data: UserLogin, db: SessionDep):
     query = select(UserModel).where(UserModel.username == user_data.username)
     result = await db.execute(query)
     if result.scalar_one_or_none():
@@ -48,6 +50,7 @@ async def register(user_data:UserLogin, db: SessionDep):
     await db.refresh(new_user)
 
     return new_user
+
 
 @router.post("/login")
 async def login(creds: UserLogin, db: SessionDep):

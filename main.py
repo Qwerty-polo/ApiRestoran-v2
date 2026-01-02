@@ -6,14 +6,20 @@ from database.redis_client import check_redis
 
 from routers import auth, menu, orders
 
-from fastapi.security import HTTPBearer # цу для замочка
+from fastapi.security import HTTPBearer  # цу для замочка
 
 from sqladmin import Admin
-from admin import UserAdmin, CategoryAdmin, DishAdmin, OrderAdmin, authentication_backend
+from admin import (
+    UserAdmin,
+    CategoryAdmin,
+    DishAdmin,
+    OrderAdmin,
+    authentication_backend,
+)
 
 
+bearer_scheme = HTTPBearer()  # додали замочок у наш swager
 
-bearer_scheme = HTTPBearer() # додали замочок у наш swager
 
 # --- LIFESPAN (Життєвий цикл) ---
 # Тут ми кажемо серверу: "Перед тим як почати роботу, створи таблиці"
@@ -29,9 +35,10 @@ async def lifespan(app: FastAPI):
 
     await check_redis()
 
-    yield # <-- Тут сервер працює і приймає запити
+    yield  # <-- Тут сервер працює і приймає запити
 
     print("Database is shutting down!")
+
 
 # --- ІНІЦІАЛІЗАЦІЯ ---
 # Передаємо наш lifespan у FastAPI
@@ -53,6 +60,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 app.include_router(auth.router)
 app.include_router(menu.router)
 app.include_router(orders.router, dependencies=[Depends(bearer_scheme)])
+
 
 @app.get("/")
 async def root():
