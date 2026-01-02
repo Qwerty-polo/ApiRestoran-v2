@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  # Наш додаток FastAPI
+  app:
+    build: .
+    container_name: menu_app_v2
+    ports:
+      - "8000:8000"
+    volumes:
+      # Прокидаємо папку з картинками, щоб вони не зникали
+      - ./static/images:/app/static/images
+    depends_on:
+      - redis  # Кажемо: "Не запускайся, поки не прокинеться Redis"
+    environment:
+      - REDIS_HOST=redis  # Адреса Редіса всередині мережі Докера
+
+  # База даних Redis (кеш)
+  redis:
+    image: redis:7-alpine
+    container_name: menu_redis_v2
+    ports:
+      - "6379:6379"
+    # volumes:  <-- Можна розкоментувати, якщо хочеш, щоб кеш зберігався після перезапуску
+    #   - redis_data:/data
+
+# volumes:
+#   redis_data:

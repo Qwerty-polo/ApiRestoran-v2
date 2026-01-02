@@ -42,6 +42,7 @@ async def create_order(order_data: OrderCreate,
 
         new_order.total_price = current_total
         await db.commit()
+        await db.refresh(new_order)
 
         query = (
             select(OrderModel)

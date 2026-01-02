@@ -2,6 +2,7 @@ from fastapi import FastAPI, Depends
 from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
 from database.db import engine, Base
+from database.redis_client import check_redis
 
 from routers import auth, menu, orders
 
@@ -25,6 +26,8 @@ async def lifespan(app: FastAPI):
         await conn.run_sync(Base.metadata.create_all)
 
     print("Database is ready!")
+
+    await check_redis()
 
     yield # <-- Тут сервер працює і приймає запити
 
