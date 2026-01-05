@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5677be90-c71a-46cb-8e22-faccda3ef1e1" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.github/workflows/ci.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -90,7 +91,8 @@
       <workItem from="1766481214990" duration="4903000" />
       <workItem from="1766650881295" duration="595000" />
       <workItem from="1766747640709" duration="12829000" />
-      <workItem from="1767346046577" duration="1784000" />
+      <workItem from="1767346046577" duration="4412000" />
+      <workItem from="1767609353432" duration="796000" />
     </task>
     <servers />
   </component>
